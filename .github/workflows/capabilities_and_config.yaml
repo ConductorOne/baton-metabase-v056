@@ -22,12 +22,16 @@ jobs:
           go-version-file: "go.mod"
 
       - name: Build
-        run: go build -o connector ./cmd/baton-metabase-v056
+        run: go build -o connector ./cmd/baton-metabase
 
       - name: Run and save config output
         run: ./connector config > config_schema.json
 
       - name: Run and save capabilities output
+        env:
+          BATON_METABASE_API_KEY: apiKey
+          BATON_METABASE_BASE_URL: https://metabase.someurl.com
+          BATON_METABASE_PAID_MODE: false
         run: ./connector capabilities > baton_capabilities.json
 
       - name: Commit changes
