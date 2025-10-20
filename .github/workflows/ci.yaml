@@ -65,7 +65,7 @@ jobs:
             -e MB_DB_FILE=/metabase.db \
             -v metabase-data-ci:/metabase.db \
             metabase/metabase:v0.56.x
-          sleep 30
+          sleep 150
 
       - name: Create CI Admin user
         id: ci_admin
