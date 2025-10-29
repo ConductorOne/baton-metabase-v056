@@ -15,8 +15,8 @@ import (
 )
 
 const (
-	queryBuilderPermission          = "query_builder"
-	queryBuilderAndNativePermission = "query_builder_and_native"
+	queryBuilderPermission          = "query-builder"
+	queryBuilderAndNativePermission = "query-builder-and-native"
 )
 
 type databaseBuilder struct {
@@ -110,7 +110,7 @@ func (d *databaseBuilder) Grants(ctx context.Context, resource *v2.Resource, _ *
 			)
 		}
 
-		if permissions.CreateQueries == "query-builder" {
+		if permissions.CreateQueries == queryBuilderPermission {
 			grants = append(grants, grant.NewGrant(resource,
 				queryBuilderPermission,
 				groupResource,
@@ -120,7 +120,7 @@ func (d *databaseBuilder) Grants(ctx context.Context, resource *v2.Resource, _ *
 			))
 		}
 
-		if permissions.CreateQueries == "query-builder-and-native" {
+		if permissions.CreateQueries == queryBuilderAndNativePermission {
 			grants = append(grants, grant.NewGrant(resource,
 				queryBuilderAndNativePermission,
 				groupResource,
