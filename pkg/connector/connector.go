@@ -20,14 +20,14 @@ import (
 
 type Connector struct {
 	vBaseConnector *baseConnector.Connector
-	v056Client     *client.MetabaseV056Client
+	v056Client     client.ClientService
 }
 
 // ResourceSyncers returns a ResourceSyncer for each resource type that should be synced from the upstream service.
-func (d *Connector) ResourceSyncers(ctx context.Context) []connectorbuilder.ResourceSyncer {
-	syncers := d.vBaseConnector.ResourceSyncers(ctx)
+func (c *Connector) ResourceSyncers(ctx context.Context) []connectorbuilder.ResourceSyncer {
+	syncers := c.vBaseConnector.ResourceSyncers(ctx)
 	syncers = append(syncers,
-		newDatabaseBuilder(d.v056Client),
+		newDatabaseBuilder(c.v056Client),
 	)
 
 	return syncers
@@ -35,25 +35,30 @@ func (d *Connector) ResourceSyncers(ctx context.Context) []connectorbuilder.Reso
 
 // Asset takes an input AssetRef and attempts to fetch it using the connector's authenticated http client
 // It streams a response, always starting with a metadata object, following by chunked payloads for the asset.
-func (d *Connector) Asset(_ context.Context, _ *v2.AssetRef) (string, io.ReadCloser, error) {
+func (c *Connector) Asset(_ context.Context, _ *v2.AssetRef) (string, io.ReadCloser, error) {
 	return "", nil, nil
 }
 
 // Metadata returns metadata about the connector.
-func (d *Connector) Metadata(_ context.Context) (*v2.ConnectorMetadata, error) {
-	return &v2.ConnectorMetadata{
-		DisplayName: "Metabase-v056",
-		Description: "Metabase connector v056 to sync users, groups and databases",
-	}, nil
+func (c *Connector) Metadata(ctx context.Context) (*v2.ConnectorMetadata, error) {
+	baseMeta, err := c.vBaseConnector.Metadata(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	baseMeta.DisplayName = "Metabase-v056"
+	baseMeta.Description = "Metabase connector v056 to sync users, groups and databases"
+
+	return baseMeta, nil
 }
 
 // Validate is called to ensure that the connector is properly configured. It should exercise any API credentials
 // to be sure that they are valid.
-func (d *Connector) Validate(ctx context.Context) (annotations.Annotations, error) {
+func (c *Connector) Validate(ctx context.Context) (annotations.Annotations, error) {
 	l := ctxzap.Extract(ctx)
 	ann := annotations.New()
 
-	versionResp, rateLimitDesc, err := d.v056Client.GetVersion(ctx)
+	versionResp, rateLimitDesc, err := c.v056Client.GetVersion(ctx)
 	if rateLimitDesc != nil {
 		ann.WithRateLimiting(rateLimitDesc)
 	}
