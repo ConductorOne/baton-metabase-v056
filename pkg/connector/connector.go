@@ -9,8 +9,10 @@ import (
 
 	"github.com/conductorone/baton-metabase-v056/pkg/client"
 	cfg "github.com/conductorone/baton-metabase-v056/pkg/config"
+	baseClient "github.com/conductorone/baton-metabase/pkg/client"
 	baseConfig "github.com/conductorone/baton-metabase/pkg/config"
 	baseConnector "github.com/conductorone/baton-metabase/pkg/connector"
+
 	v2 "github.com/conductorone/baton-sdk/pb/c1/connector/v2"
 	"github.com/conductorone/baton-sdk/pkg/annotations"
 	"github.com/conductorone/baton-sdk/pkg/connectorbuilder"
@@ -20,6 +22,7 @@ import (
 
 type Connector struct {
 	vBaseConnector *baseConnector.Connector
+	vBaseClient    *baseClient.MetabaseClient
 	v056Client     client.ClientService
 }
 
@@ -112,8 +115,15 @@ func New(ctx context.Context, config *cfg.MetabaseV056) (*Connector, error) {
 		return nil, err
 	}
 
+	vBaseClient, err := baseClient.New(ctx, config.MetabaseBaseUrl, config.MetabaseApiKey, config.MetabaseWithPaidPlan)
+	if err != nil {
+		l.Error("failed to create extended Metabase base client", zap.Error(err))
+		return nil, err
+	}
+
 	return &Connector{
 		vBaseConnector: vBaseConnector,
 		v056Client:     extendedClient,
+		vBaseClient:    vBaseClient,
 	}, nil
 }
