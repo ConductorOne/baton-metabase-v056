@@ -33,7 +33,15 @@ func (c *Connector) RegisterActionManager(ctx context.Context) (connectorbuilder
 func (c *Connector) EnableUserV056(ctx context.Context, args *structpb.Struct) (*structpb.Struct, annotations.Annotations, error) {
 	l := ctxzap.Extract(ctx)
 	ann := annotations.New()
-	userId := args.Fields["userId"].GetStringValue()
+
+	userIdField, ok := args.Fields["userId"]
+	if !ok || userIdField == nil {
+		return nil, ann, fmt.Errorf("userId field is required")
+	}
+	userId := userIdField.GetStringValue()
+	if userId == "" {
+		return nil, ann, fmt.Errorf("userId cannot be empty")
+	}
 
 	user, rateLimitDesc, err := c.vBaseClient.GetUserByID(ctx, userId)
 	if rateLimitDesc != nil {
@@ -66,7 +74,15 @@ func (c *Connector) EnableUserV056(ctx context.Context, args *structpb.Struct) (
 func (c *Connector) DisableUserV056(ctx context.Context, args *structpb.Struct) (*structpb.Struct, annotations.Annotations, error) {
 	l := ctxzap.Extract(ctx)
 	ann := annotations.New()
-	userId := args.Fields["userId"].GetStringValue()
+
+	userIdField, ok := args.Fields["userId"]
+	if !ok || userIdField == nil {
+		return nil, ann, fmt.Errorf("userId field is required")
+	}
+	userId := userIdField.GetStringValue()
+	if userId == "" {
+		return nil, ann, fmt.Errorf("userId cannot be empty")
+	}
 
 	user, rateLimitDesc, err := c.vBaseClient.GetUserByID(ctx, userId)
 	if rateLimitDesc != nil {
