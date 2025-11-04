@@ -61,11 +61,11 @@ func (c *Connector) EnableUserV056(ctx context.Context, args *structpb.Struct) (
 	}
 
 	resp, ann2, err := c.vBaseConnector.EnableUser(ctx, args)
-	if err != nil {
-		return nil, ann, fmt.Errorf("failed to enable user %s: %w", userId, err)
-	}
 	if ann2 != nil {
 		ann.Merge(ann2...)
+	}
+	if err != nil {
+		return nil, ann, fmt.Errorf("failed to enable user %s: %w", userId, err)
 	}
 
 	return resp, ann, nil
@@ -102,11 +102,11 @@ func (c *Connector) DisableUserV056(ctx context.Context, args *structpb.Struct) 
 	}
 
 	resp, ann2, err := c.vBaseConnector.DisableUser(ctx, args)
-	if err != nil {
-		return nil, ann, fmt.Errorf("failed to disable user %s: %w", userId, err)
-	}
 	if ann2 != nil {
 		ann.Merge(ann2...)
+	}
+	if err != nil {
+		return nil, ann, fmt.Errorf("failed to disable user %s: %w", userId, err)
 	}
 
 	return resp, ann, nil
