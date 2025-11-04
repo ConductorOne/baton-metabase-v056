@@ -44,7 +44,7 @@ func (c *Connector) EnableUserV056(ctx context.Context, args *structpb.Struct) (
 	}
 
 	if user.IsActive {
-		l.Info("user already active, skipping enable", zap.String("userId", userId))
+		l.Debug("user already active, skipping enable", zap.String("userId", userId))
 		return &structpb.Struct{
 			Fields: map[string]*structpb.Value{
 				"success": structpb.NewBoolValue(true),
@@ -52,13 +52,12 @@ func (c *Connector) EnableUserV056(ctx context.Context, args *structpb.Struct) (
 		}, ann, nil
 	}
 
-	l.Info("enabling inactive user.", zap.String("userId", userId))
 	resp, ann2, err := c.vBaseConnector.EnableUser(ctx, args)
 	if err != nil {
 		return nil, ann, fmt.Errorf("failed to enable user %s: %w", userId, err)
 	}
 	if ann2 != nil {
-		ann = ann2
+		ann.Merge(ann2...)
 	}
 
 	return resp, ann, nil
@@ -78,7 +77,7 @@ func (c *Connector) DisableUserV056(ctx context.Context, args *structpb.Struct) 
 	}
 
 	if !user.IsActive {
-		l.Info("user already inactive, skipping disable", zap.String("userId", userId))
+		l.Debug("user already inactive, skipping disable", zap.String("userId", userId))
 		return &structpb.Struct{
 			Fields: map[string]*structpb.Value{
 				"success": structpb.NewBoolValue(true),
@@ -86,13 +85,12 @@ func (c *Connector) DisableUserV056(ctx context.Context, args *structpb.Struct) 
 		}, ann, nil
 	}
 
-	l.Info("disabling active user", zap.String("userId", userId))
 	resp, ann2, err := c.vBaseConnector.DisableUser(ctx, args)
 	if err != nil {
 		return nil, ann, fmt.Errorf("failed to disable user %s: %w", userId, err)
 	}
 	if ann2 != nil {
-		ann = ann2
+		ann.Merge(ann2...)
 	}
 
 	return resp, ann, nil
