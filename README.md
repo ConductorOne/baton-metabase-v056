@@ -1,6 +1,6 @@
 ![Baton Logo](./baton-logo.png)
 
-# `baton-metabase-v056` [![Go Reference](https://pkg.go.dev/badge/github.com/conductorone/baton-metabase-v056.svg)](https://pkg.go.dev/github.com/conductorone/baton-metabase-v056) ![main ci](https://github.com/conductorone/baton-metabase-v056/actions/workflows/main.yaml/badge.svg)
+# `baton-metabase-v056` [![Go Reference](https://pkg.go.dev/badge/github.com/conductorone/baton-metabase-v056.svg)](https://pkg.go.dev/github.com/conductorone/baton-metabase-v056) ![ci](https://github.com/conductorone/baton-metabase-v056/actions/workflows/ci.yaml/badge.svg) ![verify](https://github.com/conductorone/baton-metabase-v056/actions/workflows/verify.yaml/badge.svg)
 
 `baton-metabase-v056` is a connector for built using the [Baton SDK](https://github.com/conductorone/baton-sdk).
 
@@ -33,14 +33,14 @@ If Metabase is running on a server with domain metabase.customer.com and port 44
 
    Requires a base URL and an API Key. Args: --metabase-base-url, --metabase-api-key
 
-   There is also the --metabase-with-paid-plan flag, to determine whether the connector is using the free open source version or a paid version of Metabase, 
+   There is also the --metabase-with-paid-plan flag, to determine whether the connector is using the free open source version or a paid version of Metabase,
    which will add the group_manager permission that makes sense in paid versions because it is not allowed to use it for free.
    By default, the flag is false.
 
    The required URL was defined in the connector requirements instructions
    To obtain the API key follow the next steps:
     1. In your Metabase address where the open source version was launched, click on the gear icon in the upper right section and click on admin settings:
-       v0.56:   
+       v0.56:
        ![1-056.png](1-056.png)
 
     2. Click on authentication and API keys, then click on manage:
@@ -121,7 +121,7 @@ Available Commands:
   help               Help about any command
 
 Flags:
-      --metabase-with-paid-plan bool Whether the Metabase instance is running a paid plan. Enables premium entitlements ($METABASE_WITH_PAID_PLAN)   
+      --metabase-with-paid-plan bool Whether the Metabase instance is running a paid plan. Enables premium entitlements ($METABASE_WITH_PAID_PLAN)
       --metabase-base-url string     The base URL 2of the Metabase instance. e.g., https://metabase.customer.com ($METABASE_BASE_URL)
       --metabase-api-key string      API key generated in Metabase for the connector ($METABASE_API_KEY)
       --client-id string             The client ID used to authenticate with ConductorOne ($BATON_CLIENT_ID)
